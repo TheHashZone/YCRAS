@@ -25,9 +25,10 @@ def select():
     print "\nComment: " + commen
 
 def clean():
-    os.system("rm users.txt")
-    os.system("rm comments.txt")
-    os.system("rm html.txt")
+    os.remove("users.txt")
+    os.remove("comments.txt")
+    os.remove("html.txt")
+    print "Files removed!"
 
 def main(argv):
     parser = argparse.ArgumentParser(add_help = False, description = ('Download Youtube comments without using the Youtube API'))
@@ -56,7 +57,9 @@ def main(argv):
             choice = raw_input("Choose >> ")
 
             if choice == "1":
-                youtube_id = raw_input("Input the YouTube ID: ")
+                if not youtube_id:
+                    youtube_id = raw_input("Input the YouTube ID: ")
+                    
                 downloader()
                 sort()
                 print "Downloaded and sorted!"
