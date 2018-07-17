@@ -1,11 +1,21 @@
 #!/usr/bin/env python
+
+from __future__ import print_function
+
 import random
 import os
 import argparse
 import sys
+import json
 
 def sort():
-    os.system("bash sort.sh")
+    cf = open("comments.txt", "w")
+    uf = open("users.txt", "w")
+    with open("html.json") as u:
+        for line in u:
+            user = json.loads(line)
+            print(user["author"].encode("utf-8"), file = uf)
+            print(user["text"].encode("utf-8"), file = cf)
 
 def select():
     users = open("users.txt", "r")
@@ -21,14 +31,14 @@ def select():
     use = user[line]
     commen = comment[line]
 
-    print "\nUser: " + use
-    print "\nComment: " + commen
+    print("\nUser: " + use)
+    print("\nComment: " + commen)
 
 def clean():
     os.remove("users.txt")
     os.remove("comments.txt")
-    os.remove("html.txt")
-    print "Files removed!"
+    os.remove("html.json")
+    print("Files removed!")
 
 def main(argv):
     parser = argparse.ArgumentParser(add_help = False, description = ('Download Youtube comments without using the Youtube API'))
@@ -36,7 +46,7 @@ def main(argv):
     parser.add_argument('--youtubeid', '-y', help = 'ID of Youtube video for which to download the comments')
 
     def downloader():
-        os.system("python downloader.py -y " + youtube_id + " -o html.txt")
+        os.system("python downloader.py -y " + youtube_id + " -o html.json")
     
     try:
         args = parser.parse_args(argv)
@@ -47,22 +57,22 @@ def main(argv):
             pass
 
         while True:
-            print "What would you like to do?\n"
-            print "1. Download & Sort"
-            print "2. Randomly select comment"
-            print "3. Clean"
-            print "4. exit"
-            print "5. help"
+            print("What would you like to do?\n")
+            print("1. Download & Sort")
+            print("2. Randomly select comment")
+            print("3. Clean")
+            print("4. exit")
+            print("5. help")
 
             choice = raw_input("Choose >> ")
 
             if choice == "1":
                 if not youtube_id:
                     youtube_id = raw_input("Input the YouTube ID: ")
-                    
+
                 downloader()
                 sort()
-                print "Downloaded and sorted!"
+                print("Downloaded and sorted!")
 
             elif choice == "2":
                 select()
@@ -77,7 +87,7 @@ def main(argv):
                 parser.print_usage()
 
             else:
-                print "Invalid command!\n"
+                print("Invalid command!\n")
 
     except Exception as e:
         print('Error:', str(e))
